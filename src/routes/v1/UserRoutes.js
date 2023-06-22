@@ -1,6 +1,6 @@
 const express = require("express");
 const { InfoController, UserController } = require("../../controllers");
-const { usermiddleware } = require("../../middlewares");
+const { authrequestmiddlewares } = require("../../middlewares");
 
 const router = express.Router();
 
@@ -11,12 +11,12 @@ const router = express.Router();
 
 router.post(
   "/signup",
-  usermiddleware.validateAuthRequest,
+  authrequestmiddlewares.validateAuthRequest,
   UserController.signup
 );
 router.post(
   "/signin",
-  usermiddleware.validateAuthRequest,
+  authrequestmiddlewares.validateAuthRequest,
   UserController.signin
 );
 

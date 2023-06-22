@@ -31,7 +31,17 @@ const ServerConfig = require('../../config/server-config')
 
   }
 
+  function verifyToken(token) {
+    try {
+        return jwt.verify(token, ServerConfig.JWT_SECRET);
+    } catch(error) {
+        console.log(error);
+        throw error;
+    }
+  }
+
   module.exports = {
     checkpassword,
-    createToken
+    createToken,
+    verifyToken
   }

@@ -1,3 +1,3 @@
 module.exports = {
-    usermiddleware:require('./User-middlewares')
+    authrequestmiddlewares:require('./auth-request-middlewares')
 }
