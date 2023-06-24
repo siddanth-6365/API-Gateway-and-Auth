@@ -1,14 +1,19 @@
 const { StatusCodes } = require('http-status-codes');
-const { UserRepo } = require('../repositories');
+const { UserRepo,RoleRepo } = require('../repositories');
 const {AppError} = require('../utils/index');
 const {Auth} =require('../utils/common')
 
+const roleRepo = new RoleRepo();
 const userRepo = new UserRepo();
 
 async function createUser(data) {
     try {
         const user = await userRepo.create(data);
+        // assigning default role as customer to user at time of signup
+        const role = await roleRepo.getRoleByName('CUSTOMER');
+        user.addRole(role); // inbuilt function we have ot should be in form of addModelname and Role is model name
         return user;
+
     } catch(error) {
         console.log(error.name);
         if(error.name == 'SequelizeValidationError' || error.name == 'SequelizeUniqueConstraintError') {

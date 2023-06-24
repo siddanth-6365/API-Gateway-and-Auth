@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
 
     static associate(models) {
-      this.belongsToMany(models.Role, { through: "User_Role", as: "role" });
+      this.belongsToMany(models.Role, { through: "user_roles", as: "role" });
     }
   }
-  
+
   Users.init(
     {
       email: {
