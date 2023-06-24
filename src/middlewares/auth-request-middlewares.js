@@ -26,10 +26,11 @@ function validateAuthRequest(req, res, next) {
 
 async function checkAuth(req, res, next) {
   try {
-    const response = await UserService.isAuthenticated(req.headers["x-access-token"]);
+    console.log("inside middleware checkAuth ")
+    const response = await UserService.isAuthenticated(req.headers["x-access-token"]); // will return the id of the user
 
     if (response) {
-      req.user = response; // setting the user id in the req object
+      req.user = response; // setting the req.user as user id from responce
       next();
     }
   } catch (error) {
@@ -37,7 +38,21 @@ async function checkAuth(req, res, next) {
   }
 }
 
+async function isAdmin(req, res, next) {
+  console.log("inside middleware isAdmin ")
+
+  const response = await UserService.isAdmin(req.user);
+  console.log("req.user :" ,req.user)
+  if(!response) {
+      return res
+              .status(StatusCodes.UNAUTHORIZED)
+              .json({message: 'User not authorized for this action'});
+  }
+  next();
+}
+
 module.exports = {
   validateAuthRequest,
   checkAuth,
+  isAdmin
 };
