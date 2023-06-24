@@ -5,10 +5,12 @@ const bcrypt = require("bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
   class Users extends Model {
+
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.Role, { through: "User_Role", as: "role" });
     }
   }
+  
   Users.init(
     {
       email: {
@@ -33,8 +35,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Users.beforeCreate(async(user) => {
-    const SALT_ROUNDS=8;
+  Users.beforeCreate(async (user) => {
+    const SALT_ROUNDS = 8;
     const encryptedPassword = bcrypt.hashSync(user.password, SALT_ROUNDS);
     user.password = encryptedPassword;
   });
