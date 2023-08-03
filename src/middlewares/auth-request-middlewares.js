@@ -38,6 +38,7 @@ async function checkAuth(req, res, next) {
   }
 }
 
+
 async function isAdmin(req, res, next) {
   console.log("inside middleware isAdmin ")
 

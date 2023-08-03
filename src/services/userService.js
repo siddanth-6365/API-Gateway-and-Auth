@@ -122,6 +122,27 @@ async function addRoletoUser(data) {
 }
 
 
+async function isFlightcompany(data) {
+    try {
+
+        const user = await userRepo.get(data);
+        if(!user) {
+            throw new AppError('No user found for the given id', StatusCodes.NOT_FOUND);
+        }
+        const flightCompanyrole = await roleRepo.getRoleByName('FLIGHT_COMPANY');
+
+        if(!flightCompanyrole) {
+            throw new AppError('No user found for the given role', StatusCodes.NOT_FOUND);
+        }
+        return user.hasRole(flightCompanyrole);
+        
+    } catch(error) {
+    
+        console.log(error);
+        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
 
 
 module.exports = {
@@ -129,6 +150,7 @@ module.exports = {
     signin,
     isAuthenticated,
     isAdmin,
-    addRoletoUser
+    addRoletoUser,
+    isFlightcompany
   
 }

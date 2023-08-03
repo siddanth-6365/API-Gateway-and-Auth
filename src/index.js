@@ -2,15 +2,21 @@ const express = require('express');
 const { ServerConfig } = require('./config');
 const apiRoutes = require('./routes');
 const app = express()
+const{allowFlights} = require('./middlewares')
 
 const rateLimit = require('express-rate-limit')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-var bodyParser = require('body-parser');
-// configure the app to use bodyParser()
-app.use(bodyParser.urlencoded({
-    extended: true}));
-app.use(bodyParser.json());
+const amqplib = require('amqplib');
+
+
+
+
+// mandatory
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+
 
 //rate limiter
 const limiter = rateLimit({
@@ -20,7 +26,8 @@ const limiter = rateLimit({
 app.use(limiter) // before  url/api we have to apply the limiter
 
 // proxy
-app.use('/flightService', createProxyMiddleware({ target: 'http://localhost:3000', changeOrigin: true, }))
+app.use('/flightService', allowFlights.checkAuth ,allowFlights.allowupdate , createProxyMiddleware({ target: 'http://localhost:3000', changeOrigin: true, }))
+
 app.use('/BookingService', createProxyMiddleware({ target: 'http://localhost:5000', changeOrigin: true ,
 pathRewrite: {
     '/BookingService': '/', // rewrite path means no need to mention in boooking service routes
